@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  netrabbitsample.producer:
+    image: ${DOCKER_REGISTRY-}netrabbitsampleproducer
+    build:
+      context: .
+      dockerfile: NetRabbitSample.Producer/Dockerfile
+  rabbit.managed:
+    image: "rabbitmq:3-management-alpine"

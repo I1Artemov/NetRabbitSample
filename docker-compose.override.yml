@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  rabbit.managed:
+    container_name: rabbitmanaged
+    ports:
+      - "5672:5672"
+      - "8081:15672"
+  netrabbitsample.producer:
+    container_name: netrabbitsample.producer
+    depends_on: 
+      - rabbit.managed

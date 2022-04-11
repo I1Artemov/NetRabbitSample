@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NetRabbitSample.Producer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
