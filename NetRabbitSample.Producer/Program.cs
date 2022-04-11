@@ -5,7 +5,6 @@ using NetRabbitSample.Business.Options;
 using RabbitMQ.Client;
 using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,12 +15,6 @@ namespace NetRabbitSample.Producer
         private static RabbitMQOptions _rabbitmqOptions;
         private static Random _random;
 
-        public static void WriteDebugLog(string text)
-        {
-            string dateStr = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
-            System.Console.WriteLine(string.Format("[{0}] {1}", dateStr, text));
-        }
-
         static void Main(string[] args)
         {
             ServiceCollection serviceCollection = new ServiceCollection();
@@ -30,7 +23,7 @@ namespace NetRabbitSample.Producer
             // For use with separate docker container for RabbitMq:
             // docker run -d --hostname rabbitmanaged --name rabbitmanaged -p 8081:15672 -p 5672:5672 rabbitmq:3-management
 
-            WriteDebugLog("Producer started");
+            Utils.WriteDebugLog("Producer started");
             CancellationTokenSource tokenSource = new CancellationTokenSource();
 
             Task processingTask = startProcessingInBackground(tokenSource.Token);
@@ -40,9 +33,9 @@ namespace NetRabbitSample.Producer
                 pressedKey = System.Console.ReadKey();
             }
             tokenSource.Cancel();
-            WriteDebugLog("Cancellation requested by user, please wait...");
+            Utils.WriteDebugLog("Producer cancellation requested, please wait...");
             System.Console.ReadKey();
-            WriteDebugLog("Processing completed");
+            Utils.WriteDebugLog("Producer processing completed");
         }
 
         private static async Task startProcessingInBackground(CancellationToken cancellationToken)
@@ -56,7 +49,7 @@ namespace NetRabbitSample.Producer
             using (var channel = connection.CreateModel())
             {
                 int messageId = 1;
-                RabbitManager rabbitManager = new RabbitManager(WriteDebugLog, channel);
+                RabbitProducer rabbitManager = new RabbitProducer(Utils.WriteDebugLog, channel);
                 rabbitManager.CreateQueue("testQueue");
 
                 // Основной цикл обработки
